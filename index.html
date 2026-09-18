@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday!</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%98%95%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Karla:wght@400;500;700&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --espresso-deep: #19100a;
+    --espresso: #2b1c14;
+    --cocoa: #44301f;
+    --cream: #f2e4cf;
+    --caramel: #c1854e;
+    --gold: #dba664;
+    --foam: #fbf2e3;
+    --rust: #8a4a2b;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    background: var(--espresso);
+    color: var(--cream);
+    font-family: 'Karla', sans-serif;
+    overflow-x: hidden;
+  }
+
+  body.locked { overflow: hidden; height: 100vh; }
+
+  ::selection { background: var(--gold); color: var(--espresso-deep); }
+
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-track { background: var(--espresso-deep); }
+  ::-webkit-scrollbar-thumb { background: var(--cocoa); border-radius: 6px; border: 2px solid var(--espresso-deep); }
+  html { scrollbar-color: var(--cocoa) var(--espresso-deep); scrollbar-width: thin; }
+
+  h1, h2, .display {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    line-height: 1.05;
+  }
+
+  .script {
+    font-family: 'Caveat', cursive;
+  }
+
+  #grain {
+    position: fixed;
+    inset: 0;
+    z-index: 500;
+    pointer-events: none;
+    opacity: 0.05;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .ring {
+    position: absolute;
+    border: 2px solid var(--rust);
+    border-radius: 50%;
+    opacity: 0.16;
+    pointer-events: none;
+  }
+  .ring::after {
+    content: "";
+    position: absolute;
+    inset: 6px;
+    border: 1px solid var(--rust);
+    border-radius: 50%;
+  }
+
+  #gate {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background:
+      radial-gradient(ellipse at 30% 20%, rgba(219,166,100,0.08), transparent 55%),
+      var(--espresso-deep);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 28px;
+    transition: opacity 0.7s ease;
+  }
+
+  #gate.hidden { opacity: 0; pointer-events: none; }
+
+  .gate-stage { text-align: center; max-width: 480px; }
+  .gate-stage.hide { display: none; }
+
+  .tag {
+    font-family: 'Caveat', cursive;
+    font-size: 1.5rem;
+    color: var(--gold);
+    display: inline-block;
+    transform: rotate(-3deg);
+    margin: 0 0 6px;
+  }
+
+  #countdownStage h1 {
+    font-size: clamp(1.7rem, 6vw, 2.5rem);
+    color: var(--foam);
+    margin: 4px 0 34px;
+  }
+
+  #countdownStage h1 span { color: var(--gold); font-style: italic; user-select: none; }
+
+  .ticket {
+    display: inline-flex;
+    justify-content: center;
+    gap: 0;
+    background: var(--cocoa);
+    border-radius: 10px;
+    padding: 20px 6px;
+    position: relative;
+    box-shadow: 0 18px 34px rgba(0,0,0,0.4);
+  }
+
+  .ticket::before, .ticket::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 18px;
+    height: 18px;
+    background: var(--espresso-deep);
+    border-radius: 50%;
+    transform: translateY(-50%);
+  }
+  .ticket::before { left: -9px; }
+  .ticket::after { right: -9px; }
+
+  .count-unit {
+    padding: 0 16px;
+    position: relative;
+  }
+  .count-unit + .count-unit {
+    border-left: 1px dashed rgba(219,166,100,0.35);
+  }
+
+  .count-unit .num {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: clamp(1.7rem, 5vw, 2.3rem);
+    color: var(--gold);
+    display: block;
+    transition: transform 0.15s ease;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .count-unit .num.tick { transform: scale(1.14); }
+
+  .count-unit .label {
+    font-family: 'Caveat', cursive;
+    font-size: 1rem;
+    color: var(--cream);
+    opacity: 0.75;
+  }
+
+  #cakeStage svg { width: 230px; height: auto; filter: drop-shadow(0 14px 18px rgba(0,0,0,0.45)); }
+
+  .flame {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    transform-origin: center bottom;
+    animation: flicker 1.4s ease-in-out infinite;
+  }
+
+  @keyframes flicker {
+    0%, 100% { transform: scaleY(1) rotate(0deg); }
+    50% { transform: scaleY(1.12) rotate(-2deg); }
+  }
+
+  .flame.blown { opacity: 0; transform: scaleY(0.2) translateY(6px); animation: none; }
+
+  .smoke { opacity: 0; transition: opacity 0.4s ease; }
+  .smoke.show { opacity: 0.6; animation: smokerise 1.6s ease-out forwards; }
+
+  @keyframes smokerise {
+    0%   { transform: translateY(0); opacity: 0.6; }
+    100% { transform: translateY(-24px); opacity: 0; }
+  }
+
+  .age-num {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 15px;
+    fill: var(--espresso-deep);
+    transition: opacity 0.25s ease;
+  }
+  .age-num.swap { opacity: 0; }
+
+  #cakeStage h2 {
+    color: var(--foam);
+    font-size: clamp(1.5rem, 5vw, 2rem);
+    margin: 22px 0 6px;
+  }
+
+  #cakeStage p.hint {
+    font-family: 'Caveat', cursive;
+    color: var(--cream);
+    opacity: 0.8;
+    font-size: 1.15rem;
+    margin: 0 0 6px;
+  }
+
+  #candleHit { cursor: pointer; outline: none; }
+  #candleHit:focus { outline: none; }
+  #candleHit:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
+
+  .cake-wrap { position: relative; display: inline-block; }
+
+  .knife-float {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    width: 54px;
+    height: 74px;
+    font-size: 2.2rem;
+    line-height: 1;
+    cursor: grab;
+    touch-action: none;
+    z-index: 5;
+    filter: drop-shadow(0 10px 12px rgba(0,0,0,0.5));
+    user-select: none;
+  }
+
+  .knife-float.show {
+    display: flex;
+    animation: knifeBob 2.6s ease-in-out infinite, knifeFadeIn 0.5s ease both;
+  }
+
+  @keyframes knifeBob {
+    0%, 100% { transform: rotate(-35deg) translateY(0); }
+    50%      { transform: rotate(-30deg) translateY(-9px); }
+  }
+  @keyframes knifeFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  .knife-float.dragging {
+    animation: none;
+    cursor: grabbing;
+    transform: rotate(-35deg);
+  }
+
+  .knife-float.cut-done {
+    animation: none;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+  }
+
+  .knife-float:focus-visible { outline: 2px solid var(--foam); outline-offset: 4px; border-radius: 8px; }
+
+
+  .brew-btn {
+    display: inline-block;
+    margin-top: 22px;
+    background: var(--gold);
+    color: var(--espresso-deep);
+    border: none;
+    padding: 13px 30px;
+    border-radius: 999px;
+    font-family: 'Karla', sans-serif;
+    font-weight: 700;
+    font-size: 0.92rem;
+    cursor: pointer;
+    position: relative;
+    box-shadow: 0 0 0 1px rgba(219,166,100,0.4), 0 10px 22px rgba(0,0,0,0.35);
+    transition: transform 0.15s ease;
+  }
+  .brew-btn:active { transform: scale(0.96); }
+  .brew-btn.fade-in { animation: fadeUp 0.5s ease both; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .brew-btn:focus-visible, .flip-inner:focus-visible, .cup-wrap:focus-visible, #candleHit:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 3px;
+  }
+
+  #mainContent { opacity: 0; transition: opacity 0.8s ease; position: relative; }
+  #mainContent.revealed { opacity: 1; }
+
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    align-items: center;
+    padding: 48px 8vw;
+    position: relative;
+    gap: 20px;
+  }
+
+  .hero-copy { position: relative; z-index: 2; }
+
+  .hero .tag { display: inline-block; margin-bottom: 10px; }
+
+  .hero h1 {
+    font-size: clamp(2.6rem, 6.4vw, 4.4rem);
+    margin: 0;
+    color: var(--foam);
+    letter-spacing: -0.01em;
+  }
+
+  .hero h1 span { color: var(--gold); font-style: italic; }
+
+  .hero p.sub {
+    max-width: 420px;
+    margin: 20px 0 0;
+    font-size: 1.08rem;
+    color: var(--cream);
+    opacity: 0.82;
+    line-height: 1.6;
+  }
+
+  .hero-visual {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 320px;
+  }
+
+  .cup-wrap {
+    width: 190px;
+    height: 190px;
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
+  }
+
+  .cup-tooltip {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(8px) scale(0.92);
+    max-width: 210px;
+    background: var(--foam);
+    color: var(--espresso-deep);
+    font-family: 'Caveat', cursive;
+    font-size: 1.15rem;
+    line-height: 1.25;
+    text-align: center;
+    padding: 10px 16px;
+    border-radius: 14px;
+    box-shadow: 0 12px 22px rgba(0,0,0,0.4);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 10;
+  }
+
+  .cup-tooltip::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 7px solid transparent;
+    border-top-color: var(--foam);
+  }
+
+  .cup-tooltip.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+
+  .steam {
+    transform-origin: bottom center;
+    animation: steamrise 3s ease-in-out infinite;
+    opacity: 0.7;
+  }
+  .steam.s2 { animation-delay: 0.6s; }
+  .steam.s3 { animation-delay: 1.2s; }
+
+  @keyframes steamrise {
+    0%   { transform: translateY(0) scaleY(1); opacity: 0; }
+    30%  { opacity: 0.6; }
+    100% { transform: translateY(-30px) scaleY(1.4); opacity: 0; }
+  }
+
+  .stamp {
+    position: absolute;
+    width: 128px;
+    height: 128px;
+    top: -6px;
+    right: 4px;
+    animation: spin 22s linear infinite;
+    z-index: 1;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 34px;
+    left: 8vw;
+    font-family: 'Caveat', cursive;
+    font-size: 1.2rem;
+    color: var(--caramel);
+  }
+
+  section { max-width: 660px; margin: 0 auto; padding: 70px 28px; position: relative; }
+
+  section h2 { font-size: clamp(1.7rem, 5vw, 2.3rem); color: var(--foam); margin: 0 0 6px; }
+
+  section .lede {
+    font-family: 'Caveat', cursive;
+    color: var(--caramel);
+    margin: 0 0 36px;
+    font-size: 1.25rem;
+  }
+
+  .divider {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    opacity: 0.55;
+    padding: 0 28px;
+  }
+  .divider .line { flex: 1; max-width: 120px; height: 1px; background: linear-gradient(90deg, transparent, var(--caramel), transparent); }
+  .divider span { font-size: 0.95rem; }
+
+  .memories {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 26px 22px;
+  }
+
+  .flip-card { perspective: 1200px; cursor: pointer; }
+  .flip-card.photo { aspect-ratio: 4 / 4.7; }
+  .flip-card.photo:nth-child(odd) { transform: rotate(-2.5deg); }
+  .flip-card.photo:nth-child(even) { transform: rotate(2deg); }
+  .flip-card.joke { height: 150px; }
+
+  .flip-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: left;
+    transition: transform 0.6s cubic-bezier(.4,.2,.2,1);
+    transform-style: preserve-3d;
+  }
+  .flip-card.flipped .flip-inner { transform: rotateY(180deg); }
+
+  .flip-face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    border-radius: 3px;
+  }
+
+  .polaroid {
+    background: var(--foam);
+    padding: 10px 10px 0;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 14px 26px rgba(0,0,0,0.4);
+  }
+  .polaroid-photo {
+    flex: 1;
+    background:
+      radial-gradient(circle at 30% 20%, rgba(219,166,100,0.35), transparent 60%),
+      repeating-linear-gradient(135deg, rgba(219,166,100,0.10) 0 8px, rgba(68,48,31,0.5) 8px 16px),
+      var(--espresso-deep);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gold);
+    font-size: 0.78rem;
+    text-align: center;
+    padding: 8px;
+  }
+  .polaroid-caption {
+    font-family: 'Caveat', cursive;
+    font-size: 1.2rem;
+    color: var(--espresso);
+    text-align: center;
+    padding: 8px 4px 10px;
+  }
+
+  .note {
+    background: var(--foam);
+    color: var(--espresso-deep);
+    padding: 20px 22px;
+    display: flex;
+    align-items: center;
+    font-family: 'Caveat', cursive;
+    font-size: 1.35rem;
+    line-height: 1.3;
+    box-shadow: 0 12px 22px rgba(0,0,0,0.35);
+    background-image: radial-gradient(circle at 85% 15%, rgba(138,74,43,0.14) 0%, transparent 40%);
+  }
+  .note::after {
+    content: "";
+    position: absolute;
+    top: 0; right: 0;
+    width: 0; height: 0;
+    border-style: solid;
+    border-width: 0 20px 20px 0;
+    border-color: transparent var(--espresso-deep) transparent transparent;
+    opacity: 0.5;
+  }
+
+  .flip-back {
+    background: var(--gold);
+    color: var(--espresso-deep);
+    transform: rotateY(180deg);
+    padding: 20px 22px;
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+    font-weight: 500;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.15);
+  }
+  .flip-card.photo .flip-back { font-size: 1rem; }
+
+  .letter-box {
+    background: var(--foam);
+    color: var(--espresso-deep);
+    border-radius: 4px;
+    padding: 40px 36px;
+    font-size: 1.08rem;
+    line-height: 1.7;
+    min-height: 160px;
+    box-shadow: 0 22px 44px rgba(0,0,0,0.4);
+    position: relative;
+  }
+
+  .letter-box .cursor {
+    display: inline-block;
+    width: 2px;
+    background: var(--espresso);
+    margin-left: 2px;
+    animation: blink 0.9s step-end infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .signoff {
+    text-align: right;
+    margin-top: 20px;
+    font-family: 'Caveat', cursive;
+    font-size: 1.7rem;
+    color: var(--rust);
+    transform: rotate(-2deg);
+  }
+
+  footer {
+    text-align: center;
+    padding: 50px 28px 80px;
+    color: var(--caramel);
+    font-family: 'Caveat', cursive;
+    font-size: 1.15rem;
+  }
+
+  .confetti-piece {
+    position: fixed;
+    top: -20px;
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.95;
+    animation: confettiFall linear forwards;
+  }
+  @keyframes confettiFall {
+    0%   { transform: translateY(0) translateX(0) rotate(0deg); }
+    100% { transform: translateY(110vh) translateX(var(--drift)) rotate(var(--spin)); }
+  }
+
+  @media (max-width: 760px) {
+    .hero { grid-template-columns: 1fr; text-align: center; padding-top: 90px; }
+    .hero-copy { order: 2; }
+    .hero-visual { order: 1; min-height: 220px; }
+    .hero p.sub { margin-left: auto; margin-right: auto; }
+    .scroll-hint { left: 50%; transform: translateX(-50%); }
+    .stamp { top: -10px; right: -6px; width: 100px; height: 100px; }
+  }
+
+  @media (max-width: 480px) {
+    .memories { grid-template-columns: 1fr; }
+    .flip-card.photo { aspect-ratio: 4 / 3.4; transform: none !important; }
+    .count-unit { padding: 0 10px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .steam, .confetti-piece, .brew-btn, .flip-inner, .flame, .stamp { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body class="locked">
+
+<div id="grain"></div>
+
+<div id="gate">
+
+  <div class="gate-stage" id="countdownStage">
+    <span class="tag script">something's brewing</span>
+    <h1>Counting down to<br><span id="hiddenTrigger">[]</span>'s birthday</h1>
+    <div class="ticket">
+      <div class="count-unit"><span class="num" id="cd-days">00</span><span class="label">days</span></div>
+      <div class="count-unit"><span class="num" id="cd-hours">00</span><span class="label">hrs</span></div>
+      <div class="count-unit"><span class="num" id="cd-mins">00</span><span class="label">mins</span></div>
+      <div class="count-unit"><span class="num" id="cd-secs">00</span><span class="label">secs</span></div>
+    </div>
+  </div>
+
+  <div class="gate-stage hide" id="cakeStage">
+    <span class="tag script">it's time</span>
+    <h2 id="cakeHeading">Make a wish!</h2>
+    <p class="hint script" id="cakeHint">Tap the candle to blow it out</p>
+
+    <div class="cake-wrap" id="cakeWrap">
+      <svg viewBox="0 0 200 160" aria-hidden="true">
+        <defs>
+          <radialGradient id="flameGlow" cx="50%" cy="60%" r="60%">
+            <stop offset="0%" stop-color="#fff3d6"/>
+            <stop offset="55%" stop-color="#e3ad6c"/>
+            <stop offset="100%" stop-color="#c1854e"/>
+          </radialGradient>
+          <linearGradient id="cakeBody" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#d99a63"/>
+            <stop offset="100%" stop-color="#b97a45"/>
+          </linearGradient>
+        </defs>
+        <ellipse cx="100" cy="142" rx="82" ry="9" fill="#000" opacity="0.35"/>
+        <rect x="38" y="96" width="124" height="40" rx="7" fill="url(#cakeBody)"/>
+        <path d="M38 101 q10 13 20 0 q10 13 20 0 q10 13 20 0 q10 13 20 0 q10 13 20 0 q10 13 20 0 v-12 h-124 z" fill="#fbf2e3"/>
+        <path id="sliceWedge" d="M100 97 L138 97 L138 135 L100 135 Z" fill="url(#cakeBody)"/>
+        <line id="cutLine" x1="100" y1="94" x2="100" y2="136" stroke="#2b1c14" stroke-width="2" stroke-dasharray="44" stroke-dashoffset="44" opacity="0"/>
+        <rect x="94" y="54" width="12" height="43" rx="2" fill="#fbf2e3"/>
+        <circle cx="100" cy="76" r="13" fill="#dba664"/>
+        <text x="100" y="81" text-anchor="middle" class="age-num" id="ageNumText">--</text>
+        <g id="candleHit" tabindex="0" role="button" aria-label="Blow out the candle">
+          <ellipse class="flame" id="flame" cx="100" cy="45" rx="7.5" ry="13" fill="url(#flameGlow)"/>
+          <circle class="smoke" id="smoke" cx="100" cy="46" r="4" fill="#ccc"/>
+          <rect x="80" y="18" width="40" height="47" fill="transparent"/>
+        </g>
+      </svg>
+
+      <div class="knife-float" id="knifeFloat" tabindex="0" role="button" aria-label="Drag the knife down onto the cake to cut a slice">🔪</div>
+    </div>
+
+    <div id="enterWrap" style="min-height: 54px;"></div>
+  </div>
+
+</div>
+
+<div id="mainContent">
+
+  <section class="hero">
+    <div class="ring" style="width:220px; height:220px; top:-60px; left:-80px;"></div>
+
+    <div class="hero-copy">
+      <span class="tag script">a small brew of birthday love</span>
+      <h1>Happy Birthday,<br><span>[Friend's Name]</span></h1>
+      <p class="sub">Pull up a chair. This one's brewed with a whole year of memories, inside jokes, and probably too much caffeine.</p>
+    </div>
+
+    <div class="hero-visual">
+      <svg class="stamp" viewBox="0 0 120 120" aria-hidden="true">
+        <defs>
+          <path id="stampCircle" d="M60,60 m-46,0 a46,46 0 1,1 92,0 a46,46 0 1,1 -92,0"/>
+        </defs>
+        <circle cx="60" cy="60" r="46" fill="none" stroke="#dba664" stroke-width="1.4" stroke-dasharray="1.5 5"/>
+        <text font-size="8.5" fill="#dba664" letter-spacing="2.5">
+          <textPath href="#stampCircle" startOffset="0%">HAPPY BIRTHDAY • BREWED WITH LOVE • </textPath>
+        </text>
+      </svg>
+
+      <div class="cup-wrap" id="cupBtn" tabindex="0" role="button" aria-label="Click for a surprise">
+        <svg viewBox="0 0 120 120" width="100%" height="100%">
+          <g class="steam s1"><path d="M45 40 Q40 30 45 22 Q50 14 45 6" stroke="#dba664" stroke-width="3" fill="none" stroke-linecap="round"/></g>
+          <g class="steam s2"><path d="M60 40 Q55 30 60 22 Q65 14 60 6" stroke="#dba664" stroke-width="3" fill="none" stroke-linecap="round"/></g>
+          <g class="steam s3"><path d="M75 40 Q70 30 75 22 Q80 14 75 6" stroke="#dba664" stroke-width="3" fill="none" stroke-linecap="round"/></g>
+          <path d="M25 45 h60 l-6 45 a10 10 0 0 1 -10 9 H41 a10 10 0 0 1 -10 -9 Z" fill="#c1854e"/>
+          <path d="M85 52 h8 a10 10 0 0 1 0 20 h-6" fill="none" stroke="#c1854e" stroke-width="5"/>
+          <ellipse cx="55" cy="45" rx="30" ry="5" fill="#44301f"/>
+        </svg>
+        <div class="cup-tooltip" id="cupTooltip">okay that's enough caffeine for one day ☕😵</div>
+      </div>
+    </div>
+
+    <p class="scroll-hint">scroll down ↓</p>
+  </section>
+
+  <div class="divider"><span class="line"></span><span>☕</span><span class="line"></span></div>
+
+  <section id="memories">
+    <div class="ring" style="width:150px; height:150px; bottom:-30px; right:-50px;"></div>
+    <h2>A few of my favorites</h2>
+    <p class="lede">tap a photo to flip it — swap these for your own</p>
+
+    <div class="memories">
+      <div class="flip-card photo" tabindex="0">
+        <div class="flip-inner">
+          <div class="flip-face polaroid">
+            <div class="polaroid-photo">your photo here (1)</div>
+            <div class="polaroid-caption">tap to flip ↺</div>
+          </div>
+          <div class="flip-face flip-back">The story behind this one goes here.</div>
+        </div>
+      </div>
+      <div class="flip-card photo" tabindex="0">
+        <div class="flip-inner">
+          <div class="flip-face polaroid">
+            <div class="polaroid-photo">your photo here (2)</div>
+            <div class="polaroid-caption">tap to flip ↺</div>
+          </div>
+          <div class="flip-face flip-back">The story behind this one goes here.</div>
+        </div>
+      </div>
+      <div class="flip-card photo" tabindex="0">
+        <div class="flip-inner">
+          <div class="flip-face polaroid">
+            <div class="polaroid-photo">your photo here (3)</div>
+            <div class="polaroid-caption">tap to flip ↺</div>
+          </div>
+          <div class="flip-face flip-back">The story behind this one goes here.</div>
+        </div>
+      </div>
+      <div class="flip-card photo" tabindex="0">
+        <div class="flip-inner">
+          <div class="flip-face polaroid">
+            <div class="polaroid-photo">your photo here (4)</div>
+            <div class="polaroid-caption">tap to flip ↺</div>
+          </div>
+          <div class="flip-face flip-back">The story behind this one goes here.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"><span class="line"></span><span>☕</span><span class="line"></span></div>
+
+  <section id="jokes">
+    <h2>Only you'll get these</h2>
+    <p class="lede">tap a note to flip it — swap these for your own</p>
+
+    <div class="jokes" style="display:flex; flex-direction:column; gap:18px;">
+      <div class="flip-card joke" tabindex="0">
+        <div class="flip-inner">
+          <div class="flip-face note">Inside joke #1 setup goes here...</div>
+          <div class="flip-face flip-back">The punchline goes here 😄</div>
+        </div>
+      </div>
+      <div class="flip-card joke" tabindex="0">
+        <div class="flip-inner">
+          <div class="flip-face note">Inside joke #2 setup goes here...</div>
+          <div class="flip-face flip-back">The punchline goes here 😄</div>
+        </div>
+      </div>
+      <div class="flip-card joke" tabindex="0">
+        <div class="flip-inner">
+          <div class="flip-face note">Inside joke #3 setup goes here...</div>
+          <div class="flip-face flip-back">The punchline goes here 😄</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"><span class="line"></span><span>☕</span><span class="line"></span></div>
+
+  <section id="letter">
+    <div class="ring" style="width:170px; height:170px; top:-20px; left:-70px;"></div>
+    <h2>One more thing</h2>
+    <p class="lede">your birthday message, typed out</p>
+
+    <div class="letter-box">
+      <span id="typedMessage"></span><span class="cursor">&nbsp;</span>
+      <div class="signoff">— [Your Name]</div>
+    </div>
+
+    <button class="brew-btn" id="beanBtn">Lets celebrate 🎊🎊🎊🎊</button>
+  </section>
+
+  <footer>made with coffee &amp; a little code, just for you</footer>
+</div>
+
+<script>
+  const BIRTHDAY_DATE = new Date('2026-09-19T00:00:00');
+  const CURRENT_AGE = 24;
+  const TYPED_MESSAGE = "Happy birthday! Here's to another year of terrible puns, late-night talks, and way too much coffee. Grateful for you, always.";
+
+  const NEW_AGE = CURRENT_AGE + 1;
+
+  const cdDays = document.getElementById('cd-days');
+  const cdHours = document.getElementById('cd-hours');
+  const cdMins = document.getElementById('cd-mins');
+  const cdSecs = document.getElementById('cd-secs');
+
+  let lastVals = {};
+  function pulse(el, val) {
+    if (lastVals[el.id] !== val) {
+      el.textContent = val;
+      el.classList.add('tick');
+      setTimeout(() => el.classList.remove('tick'), 150);
+      lastVals[el.id] = val;
+    }
+  }
+
+  let countdownTimer;
+  function updateCountdown() {
+    const now = new Date();
+    const diff = BIRTHDAY_DATE - now;
+
+    if (diff <= 0) {
+      clearInterval(countdownTimer);
+      showCakeStage();
+      return;
+    }
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const mins = Math.floor((diff / (1000 * 60)) % 60);
+    const secs = Math.floor((diff / 1000) % 60);
+
+    pulse(cdDays, String(days).padStart(2, '0'));
+    pulse(cdHours, String(hours).padStart(2, '0'));
+    pulse(cdMins, String(mins).padStart(2, '0'));
+    pulse(cdSecs, String(secs).padStart(2, '0'));
+  }
+
+  updateCountdown();
+  countdownTimer = setInterval(updateCountdown, 1000);
+
+  document.getElementById('hiddenTrigger').addEventListener('dblclick', () => {
+    clearInterval(countdownTimer);
+    showCakeStage();
+  });
+
+  function showCakeStage() {
+    document.getElementById('countdownStage').classList.add('hide');
+    const cakeStage = document.getElementById('cakeStage');
+    cakeStage.classList.remove('hide');
+    document.getElementById('ageNumText').textContent = CURRENT_AGE;
+  }
+
+  let candleBlown = false;
+  function blowCandle() {
+    if (candleBlown) return;
+    candleBlown = true;
+
+    const flame = document.getElementById('flame');
+    const smoke = document.getElementById('smoke');
+    const ageText = document.getElementById('ageNumText');
+    const heading = document.getElementById('cakeHeading');
+    const hint = document.getElementById('cakeHint');
+
+    flame.classList.add('blown');
+    smoke.classList.add('show');
+
+    setTimeout(() => {
+      ageText.classList.add('swap');
+      setTimeout(() => {
+        ageText.textContent = NEW_AGE;
+        ageText.classList.remove('swap');
+      }, 260);
+
+      heading.textContent = NEW_AGE + " looks good on you!";
+      hint.textContent = "drag the knife onto the cake to cut a slice";
+
+      const knifeFloat = document.getElementById('knifeFloat');
+      knifeFloat.style.display = 'flex';
+      knifeFloat.classList.add('show');
+      resetKnife();
+    }, 500);
+  }
+
+  const candleHit = document.getElementById('candleHit');
+  candleHit.addEventListener('click', () => { blowCandle(); candleHit.blur(); });
+  candleHit.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); blowCandle(); }
+  });
+
+  const cakeWrap = document.getElementById('cakeWrap');
+  const knifeFloat = document.getElementById('knifeFloat');
+  const sliceWedge = document.getElementById('sliceWedge');
+  const cutLine = document.getElementById('cutLine');
+
+  const KNIFE_W = 54, KNIFE_H = 74;
+  const KNIFE_START = { left: 172, top: -50 };
+  const CUT_ZONE = { left: 20, right: 210, top: 90, bottom: 168 };
+
+  let dragging = false;
+  let dragOffsetX = 0, dragOffsetY = 0;
+  let hasEnteredTop = false;
+  let cutDone = false;
+
+  function knifeCenter() {
+    const left = parseFloat(knifeFloat.style.left) || KNIFE_START.left;
+    const top = parseFloat(knifeFloat.style.top) || KNIFE_START.top;
+    return { x: left + KNIFE_W / 2, y: top + KNIFE_H / 2 };
+  }
+
+  function resetKnife() {
+    cutDone = false;
+    hasEnteredTop = false;
+    knifeFloat.classList.remove('cut-done');
+    knifeFloat.style.transition = '';
+    knifeFloat.style.opacity = '1';
+    knifeFloat.style.left = KNIFE_START.left + 'px';
+    knifeFloat.style.top = KNIFE_START.top + 'px';
+
+    sliceWedge.style.transition = 'none';
+    cutLine.style.transition = 'none';
+    sliceWedge.style.transform = '';
+    sliceWedge.style.opacity = '1';
+    cutLine.style.opacity = '0';
+    cutLine.style.strokeDashoffset = 44;
+    requestAnimationFrame(() => {
+      sliceWedge.style.transition = '';
+      cutLine.style.transition = '';
+    });
+  }
+
+  function eventPoint(e) {
+    return e.touches ? e.touches[0] : e;
+  }
+
+  function pointerDown(e) {
+    if (cutDone) return;
+    dragging = true;
+    knifeFloat.classList.add('dragging');
+    knifeFloat.style.transition = '';
+    const p = eventPoint(e);
+    const rect = knifeFloat.getBoundingClientRect();
+    dragOffsetX = p.clientX - rect.left;
+    dragOffsetY = p.clientY - rect.top;
+    if (knifeFloat.setPointerCapture && e.pointerId !== undefined) {
+      try { knifeFloat.setPointerCapture(e.pointerId); } catch (err) {}
+    }
+    e.preventDefault();
+  }
+
+  function pointerMove(e) {
+    if (!dragging || cutDone) return;
+    if (e.touches) e.preventDefault();
+    const p = eventPoint(e);
+    const wrapRect = cakeWrap.getBoundingClientRect();
+    const left = p.clientX - wrapRect.left - dragOffsetX;
+    const top = p.clientY - wrapRect.top - dragOffsetY;
+    knifeFloat.style.left = left + 'px';
+    knifeFloat.style.top = top + 'px';
+
+    const c = knifeCenter();
+    const withinX = c.x > CUT_ZONE.left - 25 && c.x < CUT_ZONE.right + 25;
+
+    if (withinX) {
+      const zoneH = CUT_ZONE.bottom - CUT_ZONE.top;
+      let pct = (c.y - CUT_ZONE.top) / zoneH;
+      pct = Math.max(0, Math.min(1, pct));
+      const dashLen = 44;
+      cutLine.style.opacity = pct > 0.05 ? Math.min(1, pct * 1.2) : 0;
+      cutLine.style.strokeDashoffset = dashLen * (1 - pct);
+      sliceWedge.style.transform = `translate(${pct * 16}px, ${pct * 10}px) rotate(${pct * 4}deg)`;
+      sliceWedge.style.opacity = 1 - pct * 0.15;
+
+      if (c.y <= CUT_ZONE.top + 14) hasEnteredTop = true;
+      if (hasEnteredTop && c.y >= CUT_ZONE.bottom - 10) {
+        cutDone = true;
+        dragging = false;
+        completeCut();
+      }
+    }
+  }
+
+  function pointerUp() {
+    if (!dragging) return;
+    dragging = false;
+    knifeFloat.classList.remove('dragging');
+    if (!cutDone) {
+      knifeFloat.style.transition = 'left 0.4s ease, top 0.4s ease';
+      knifeFloat.style.left = KNIFE_START.left + 'px';
+      knifeFloat.style.top = KNIFE_START.top + 'px';
+      hasEnteredTop = false;
+      setTimeout(() => { knifeFloat.style.transition = ''; }, 420);
+    }
+  }
+
+  knifeFloat.addEventListener('pointerdown', pointerDown);
+  window.addEventListener('pointermove', pointerMove);
+  window.addEventListener('pointerup', pointerUp);
+  knifeFloat.addEventListener('touchstart', pointerDown, { passive: false });
+  window.addEventListener('touchmove', pointerMove, { passive: false });
+  window.addEventListener('touchend', pointerUp);
+
+  knifeFloat.addEventListener('keydown', e => {
+    if (cutDone) return;
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      knifeFloat.style.transition = 'left 0.6s ease, top 0.6s ease';
+      knifeFloat.style.left = (CUT_ZONE.left + (CUT_ZONE.right - CUT_ZONE.left) / 2 - KNIFE_W / 2) + 'px';
+      knifeFloat.style.top = (CUT_ZONE.bottom - KNIFE_H / 2) + 'px';
+      cutDone = true;
+      setTimeout(completeCut, 620);
+    }
+  });
+
+  function completeCut() {
+    knifeFloat.classList.add('cut-done');
+    sliceWedge.style.transition = 'transform 0.5s ease, opacity 0.6s ease 0.1s';
+    sliceWedge.style.transform = 'translate(34px, 22px) rotate(8deg)';
+    sliceWedge.style.opacity = '0';
+    cutLine.style.opacity = '1';
+
+    setTimeout(showEnterButton, 450);
+  }
+
+  function showEnterButton() {
+    const enterWrap = document.getElementById('enterWrap');
+    const enterBtn = document.createElement('button');
+    enterBtn.className = 'brew-btn fade-in';
+    enterBtn.textContent = 'step inside ☕';
+    enterBtn.addEventListener('click', revealMain);
+    enterWrap.appendChild(enterBtn);
+  }
+
+  function revealMain() {
+    const gate = document.getElementById('gate');
+    gate.classList.add('hidden');
+    document.body.classList.remove('locked');
+    const main = document.getElementById('mainContent');
+    main.classList.add('revealed');
+    setTimeout(() => { gate.style.display = 'none'; }, 750);
+  }
+
+  (function typeWriter() {
+    const el = document.getElementById('typedMessage');
+    let i = 0;
+    let started = false;
+    function tick() {
+      if (i <= TYPED_MESSAGE.length) {
+        el.textContent = TYPED_MESSAGE.slice(0, i);
+        i++;
+        setTimeout(tick, 32);
+      }
+    }
+    const letterSection = document.getElementById('letter');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !started) {
+          started = true;
+          tick();
+          observer.disconnect();
+        }
+      });
+    }, { threshold: 0.4 });
+    observer.observe(letterSection);
+  })();
+
+  document.querySelectorAll('.flip-card').forEach(card => {
+    const toggle = () => card.classList.toggle('flipped');
+    card.addEventListener('click', toggle);
+    card.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+    });
+  });
+
+  const CONFETTI_COLORS = ['#ff6b81', '#ffd166', '#06d6a0', '#4cc9f0', '#b388ff', '#ff9f45', '#dba664', '#fbf2e3'];
+
+  function dropConfetti(count) {
+    for (let i = 0; i < count; i++) {
+      setTimeout(() => {
+        const piece = document.createElement('div');
+        piece.className = 'confetti-piece';
+
+        const size = 6 + Math.random() * 7;
+        const isRound = Math.random() < 0.35;
+        piece.style.width = size + 'px';
+        piece.style.height = (isRound ? size : size * 1.7) + 'px';
+        piece.style.borderRadius = isRound ? '50%' : '2px';
+        piece.style.background = CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)];
+        piece.style.left = Math.random() * 100 + 'vw';
+
+        const duration = 2.6 + Math.random() * 2.2;
+        piece.style.animationDuration = duration + 's';
+        piece.style.setProperty('--drift', (Math.random() * 160 - 80) + 'px');
+        piece.style.setProperty('--spin', (360 + Math.random() * 540) + 'deg');
+
+        document.body.appendChild(piece);
+        setTimeout(() => piece.remove(), duration * 1000 + 100);
+      }, i * 35);
+    }
+  }
+
+  document.getElementById('beanBtn').addEventListener('click', () => dropConfetti(70));
+  let cupClicks = 0;
+  function handleCupClick() {
+    cupClicks++;
+    dropConfetti(40);
+    if (cupClicks % 10 === 0) showCupTooltip();
+  }
+
+  function showCupTooltip() {
+    const tip = document.getElementById('cupTooltip');
+    tip.classList.add('show');
+    clearTimeout(tip._hideTimer);
+    tip._hideTimer = setTimeout(() => tip.classList.remove('show'), 2800);
+  }
+
+  document.getElementById('cupBtn').addEventListener('click', handleCupClick);
+  document.getElementById('cupBtn').addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') handleCupClick();
+  });
+</script>
+
+</body>
+</html>
